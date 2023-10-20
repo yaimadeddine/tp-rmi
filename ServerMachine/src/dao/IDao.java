@@ -24,5 +24,7 @@ public interface IDao<T> extends Remote {
     List<T> findAll() throws RemoteException;
 
     T findById(int id) throws RemoteException;
+    
+    List<T> findMachinesBySalle(int id) throws RemoteException;
 
 }

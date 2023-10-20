@@ -49,5 +49,8 @@ public class Salle implements Serializable{
         this.code = code;
     }
     
-    
+    @Override
+    public String toString() {
+        return "salle : " + code;
+    }
 }

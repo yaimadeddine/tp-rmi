@@ -12,6 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateUtil;
@@ -37,18 +38,20 @@ public class MachineService extends UnicastRemoteObject implements IDao<Machine>
             tx.commit();
             return true;
         } catch (HibernateException ex) {
-            if(tx != null)
+            if (tx != null) {
                 tx.rollback();
-        }finally {
-            if(session != null)
+            }
+        } finally {
+            if (session != null) {
                 session.close();
+            }
         }
         return false;
     }
 
     @Override
     public boolean update(Machine o) throws RemoteException {
-         Session session = null;
+        Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -57,18 +60,20 @@ public class MachineService extends UnicastRemoteObject implements IDao<Machine>
             tx.commit();
             return true;
         } catch (HibernateException ex) {
-            if(tx != null)
+            if (tx != null) {
                 tx.rollback();
-        }finally {
-            if(session != null)
+            }
+        } finally {
+            if (session != null) {
                 session.close();
+            }
         }
         return false;
     }
 
     @Override
     public boolean delete(Machine o) throws RemoteException {
-         Session session = null;
+        Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -77,11 +82,13 @@ public class MachineService extends UnicastRemoteObject implements IDao<Machine>
             tx.commit();
             return true;
         } catch (HibernateException ex) {
-            if(tx != null)
+            if (tx != null) {
                 tx.rollback();
-        }finally {
-            if(session != null)
+            }
+        } finally {
+            if (session != null) {
                 session.close();
+            }
         }
         return false;
     }
@@ -94,36 +101,70 @@ public class MachineService extends UnicastRemoteObject implements IDao<Machine>
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            machines  = session.getNamedQuery("findAllNative").list();
+            machines = session.getNamedQuery("findAllNative").list();
             tx.commit();
         } catch (HibernateException ex) {
-            if(tx != null)
+            if (tx != null) {
                 tx.rollback();
-        }finally {
-            if(session != null)
+            }
+        } finally {
+            if (session != null) {
                 session.close();
+            }
         }
         return machines;
     }
 
     @Override
     public Machine findById(int id) throws RemoteException {
-         Session session = null;
+        Session session = null;
         Transaction tx = null;
         Machine machine = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            machine  = (Machine) session.get(Machine.class, id);
+            machine = (Machine) session.get(Machine.class, id);
             tx.commit();
         } catch (HibernateException ex) {
-            if(tx != null)
+            if (tx != null) {
                 tx.rollback();
-        }finally {
-            if(session != null)
+            }
+        } finally {
+            if (session != null) {
                 session.close();
+            }
         }
         return machine;
+    }
+
+    @Override
+    public List<Machine> findMachinesBySalle(int id) throws RemoteException {
+        Session session = null;
+        Transaction tx = null;
+        List<Machine> machines = null;
+
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            tx = session.beginTransaction();
+
+            String sql = "SELECT * FROM machine WHERE salle_id = :salleId";
+            SQLQuery query = session.createSQLQuery(sql);
+            query.setParameter("salleId", id);
+            query.addEntity(Machine.class); // Map the results to the Machine entity.
+
+            machines = query.list();
+            tx.commit();
+        } catch (HibernateException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        return machines;
     }
 
 }

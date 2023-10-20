@@ -7,6 +7,7 @@ package clientmachine;
 
 import dao.IDao;
 import entities.Machine;
+import entities.Salle;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -25,8 +26,12 @@ public class ClientMachine {
      */
     public static void main(String[] args) {
         try {
-            IDao<Machine> dao = (IDao<Machine>) Naming.lookup("rmi://localhost:1099/machineDao");
-            dao.create(new Machine("RT55", "TOSHIBA", 7000,null));
+            IDao<Machine> machieDao = (IDao<Machine>) Naming.lookup("rmi://localhost:1099/machineDao");
+            IDao<Salle> salleDao = (IDao<Salle>) Naming.lookup("rmi://localhost:1099/salleDao");
+
+            System.out.println(machieDao.findMachinesBySalle(salleDao.findById(1).getId()));
+            
+            
 
         } catch (NotBoundException ex) {
             Logger.getLogger(ClientMachine.class.getName()).log(Level.SEVERE, null, ex);

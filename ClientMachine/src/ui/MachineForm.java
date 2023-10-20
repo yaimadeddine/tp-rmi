@@ -7,12 +7,15 @@ package ui;
 
 import dao.IDao;
 import entities.Machine;
+import entities.Salle;
+import static java.lang.Integer.parseInt;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,30 +25,48 @@ import javax.swing.table.DefaultTableModel;
 public class MachineForm extends javax.swing.JInternalFrame {
 
     IDao<Machine> dao = null;
+    IDao<Salle> daoSalle = null;
+
     DefaultTableModel model = null;
+    private static int id;
 
     /**
      * Creates new form MachineForm
      */
-    
-    public void load(){
+    public void load() {
         try {
             model.setRowCount(0);
-            for(Machine m : dao.findAll())
+            for (Machine m : dao.findAll()) {
                 model.addRow(new Object[]{
                     m.getId(),
                     m.getRef(),
                     m.getMarque(),
-                    m.getPrix()
+                    m.getPrix(),
+                    (m.getSalle() == null) ? "pas de salle" : m.getSalle().getCode()
+
                 });
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(MachineForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public void loadSalleList() {
+        try {
+            for (Salle s : daoSalle.findAll()) {
+                salleList.addItem(s);
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(MachineForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public MachineForm() {
         initComponents();
         try {
             dao = (IDao<Machine>) Naming.lookup("rmi://localhost:1099/machineDao");
+            daoSalle = (IDao<Salle>) Naming.lookup("rmi://localhost:1099/salleDao");
+
         } catch (NotBoundException ex) {
             Logger.getLogger(MachineForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MalformedURLException ex) {
@@ -53,10 +74,11 @@ public class MachineForm extends javax.swing.JInternalFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(MachineForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         model = (DefaultTableModel) listMachines.getModel();
-        
+
         load();
+        loadSalleList();
     }
 
     /**
@@ -76,6 +98,8 @@ public class MachineForm extends javax.swing.JInternalFrame {
         txtRef = new javax.swing.JTextField();
         txtMarque = new javax.swing.JTextField();
         txtPrix = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        salleList = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         bnAdd = new javax.swing.JButton();
         bnUpdate = new javax.swing.JButton();
@@ -100,38 +124,51 @@ public class MachineForm extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Prix : ");
 
+        jLabel4.setText("Salle");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addGap(28, 28, 28)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtRef)
-                    .addComponent(txtMarque)
-                    .addComponent(txtPrix, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
-                .addContainerGap(29, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtMarque, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtRef, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtPrix, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                            .addComponent(salleList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtRef, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtMarque, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtPrix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(salleList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -146,8 +183,18 @@ public class MachineForm extends javax.swing.JInternalFrame {
         });
 
         bnUpdate.setText("Modifier");
+        bnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bnUpdateActionPerformed(evt);
+            }
+        });
 
         bnDelete.setText("Supprimer");
+        bnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -170,7 +217,7 @@ public class MachineForm extends javax.swing.JInternalFrame {
                 .addComponent(bnUpdate)
                 .addGap(18, 18, 18)
                 .addComponent(bnDelete)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -183,7 +230,20 @@ public class MachineForm extends javax.swing.JInternalFrame {
             new String [] {
                 "ID", "Référence", "Marque", "Prix", "Salle"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        listMachines.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listMachinesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(listMachines);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -233,12 +293,64 @@ public class MachineForm extends javax.swing.JInternalFrame {
             String ref = txtRef.getText().toString();
             String marque = txtMarque.getText().toString();
             double prix = Double.parseDouble(txtPrix.getText().toString());
-            dao.create(new Machine(ref, marque, prix, null));
+            Salle salle = (Salle) salleList.getSelectedItem();
+            dao.create(new Machine(ref, marque, prix, salle));
             load();
         } catch (RemoteException ex) {
             Logger.getLogger(MachineForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_bnAddActionPerformed
+
+    private void bnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnDeleteActionPerformed
+        // TODO add your handling code here:
+        int answer = JOptionPane.showConfirmDialog(this, "Etes vous sur de supprimer cette machine?");
+        if (answer == 0) {
+            try {
+                if (dao.delete(dao.findById(id))) {
+                    JOptionPane.showMessageDialog(this, "Machine supprimé");
+                    load();
+                    
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(MachineForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_bnDeleteActionPerformed
+
+    private void listMachinesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listMachinesMouseClicked
+        // TODO add your handling code here:
+        id = parseInt(model.getValueAt(listMachines.getSelectedRow(), 0).toString());
+        txtRef.setText(model.getValueAt(listMachines.getSelectedRow(), 1).toString());
+        txtMarque.setText(model.getValueAt(listMachines.getSelectedRow(), 2).toString());
+        txtPrix.setText(model.getValueAt(listMachines.getSelectedRow(), 3).toString());
+        salleList.getModel().setSelectedItem(model.getValueAt(listMachines.getSelectedRow(), 4));
+
+    }//GEN-LAST:event_listMachinesMouseClicked
+
+    private void bnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnUpdateActionPerformed
+        try {
+            // TODO add your handling code here:
+            String ref = txtRef.getText();
+            String marque = txtMarque.getText();
+            String prix = txtPrix.getText();
+            Salle salle = (Salle) salleList.getSelectedItem();
+            Machine m = dao.findById(id);
+            m.setRef(ref);
+            m.setMarque(marque);
+            m.setPrix(parseInt(prix));
+            m.setSalle(salle);
+
+            int answer = JOptionPane.showConfirmDialog(this, "Etes vous sur de modifier cette machine?");
+            if (answer == 0) {
+                if (dao.update(m)) {
+                    JOptionPane.showMessageDialog(this, "machine modifié");
+                    load();
+                }
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(MachineForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bnUpdateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -248,12 +360,14 @@ public class MachineForm extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JTable listMachines;
+    private javax.swing.JComboBox salleList;
     private javax.swing.JTextField txtMarque;
     private javax.swing.JTextField txtPrix;
     private javax.swing.JTextField txtRef;

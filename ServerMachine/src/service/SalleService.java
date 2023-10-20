@@ -6,12 +6,14 @@
 package service;
 
 import dao.IDao;
+import entities.Machine;
 import entities.Salle;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateUtil;
@@ -125,5 +127,14 @@ public class SalleService extends UnicastRemoteObject implements IDao<Salle> {
         }
         return salle;
     }
+
+    @Override
+    public List<Salle> findMachinesBySalle(int id) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+   
+    
+   
 
 }

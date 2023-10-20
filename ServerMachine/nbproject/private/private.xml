@@ -2,14 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/yoaim/OneDrive/Bureau/emsi/iir5/s1/Architecture%20des%20composants%20d'entreprises/ServerMachine/src/service/SalleService.java</file>
-            <file>file:/C:/Users/yoaim/OneDrive/Bureau/emsi/iir5/s1/Architecture%20des%20composants%20d'entreprises/ServerMachine/src/entities/Salle.java</file>
-            <file>file:/C:/Users/yoaim/OneDrive/Bureau/emsi/iir5/s1/Architecture%20des%20composants%20d'entreprises/ServerMachine/src/service/MachineService.java</file>
-            <file>file:/C:/Users/yoaim/OneDrive/Bureau/emsi/iir5/s1/Architecture%20des%20composants%20d'entreprises/ServerMachine/src/config/hibernate.cfg.xml</file>
-            <file>file:/C:/Users/yoaim/OneDrive/Bureau/emsi/iir5/s1/Architecture%20des%20composants%20d'entreprises/ServerMachine/src/servermachine/ServerMachine.java</file>
-            <file>file:/C:/Users/yoaim/OneDrive/Bureau/emsi/iir5/s1/Architecture%20des%20composants%20d'entreprises/ServerMachine/src/util/HibernateUtil.java</file>
-            <file>file:/C:/Users/yoaim/OneDrive/Bureau/emsi/iir5/s1/Architecture%20des%20composants%20d'entreprises/ServerMachine/src/entities/Machine.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
