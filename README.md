@@ -1,5 +1,4 @@
 # tp-rmi
 
-
-Uploading Gestion des machiens 2023-10-22 22-46-48.mp4…
+https://github.com/yaimadeddine/tp-rmi/assets/101249465/ec195835-0124-4452-8e06-1a5352afbc31
 
